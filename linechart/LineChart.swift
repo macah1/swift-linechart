@@ -82,6 +82,7 @@ open class LineChart: UIView {
     public struct Dots {
         public var visible: Bool = true
         public var color: UIColor = UIColor.white
+        public var innerColor: UIColor?
         public var innerRadius: CGFloat = 8
         public var outerRadius: CGFloat = 12
         public var innerRadiusHighlighted: CGFloat = 8
@@ -303,7 +304,13 @@ open class LineChart: UIView {
             
             // draw custom layer with another layer in the center
             let dotLayer = DotCALayer()
-            dotLayer.dotInnerColor = colors[lineIndex]
+            if let innerColor = dots.innerColor {
+                dotLayer.dotInnerColor = innerColor
+            }
+            else {
+                dotLayer.dotInnerColor = colors[lineIndex]
+            }
+            
             dotLayer.innerRadius = dots.innerRadius
             dotLayer.backgroundColor = dots.color.cgColor
             dotLayer.cornerRadius = dots.outerRadius / 2
