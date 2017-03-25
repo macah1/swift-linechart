@@ -44,7 +44,13 @@ open class LineChart: UIView {
     
     public struct Labels {
         public var visible: Bool = true
+        public var SIIMode: Bool = false
         public var values: [String] = []
+        
+        // only for SII Mode
+        public var marginTop: CGFloat = 20
+        public var backgroundColor: UIColor = UIColor.lightGray
+        public var paddingTopBottom: CGFloat = 10
     }
     
     public struct Grid {
@@ -192,7 +198,15 @@ open class LineChart: UIView {
         if x.axis.visible && y.axis.visible { drawAxes() }
         
         // draw labels
-        if x.labels.visible { drawXLabels() }
+        if x.labels.visible {
+            if x.labels.SIIMode {
+                drawSIIXLabels()
+            }
+            else {
+                drawXLabels()
+            }
+            
+        }
         if y.labels.visible { drawYLabels() }
         
         // draw lines
@@ -253,6 +267,7 @@ open class LineChart: UIView {
      * Listen on touch end event.
      */
     override open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("touchesEnded")
         handleTouchEvents(touches as NSSet!, event: event!)
     }
     
@@ -262,6 +277,7 @@ open class LineChart: UIView {
      * Listen on touch move event
      */
     override open func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("touchesMoved")
         handleTouchEvents(touches as NSSet!, event: event!)
     }
     
@@ -528,6 +544,58 @@ open class LineChart: UIView {
             label.text = text
             self.addSubview(label)
         }
+    }
+    
+    /**
+     * Special func for SII Project
+     */
+    fileprivate func drawSIIXLabels() {
+        let xAxisData = self.dataStore[0]
+        let y = self.bounds.height - x.axis.inset + x.labels.marginTop
+        let (_, _, step) = x.linear.ticks(xAxisData.count)
+        let width = x.scale(step) / 2
+        let height = width
+        
+        drawXBackground(forHeight: height)
+        
+        var text: String
+        for (index, _) in xAxisData.enumerated() {
+            let xValue = self.x.scale(CGFloat(index)) + x.axis.inset - (width / 2)
+            let button = RoundButton(frame: CGRect(x: xValue, y: y, width: width, height: height))
+            button.titleLabel?.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.caption2)
+            button.titleLabel?.textAlignment = .center
+            button.titleLabel?.textColor = UIColor.black
+            button.titleLabel?.highlightedTextColor = UIColor.white
+            button.backgroundColor = UIColor.black
+            button.addTarget(self, action: #selector(LineChart.buttonPressed(sender:)), for: .touchUpInside)
+            if (x.labels.values.count != 0) {
+                text = x.labels.values[index]
+            } else {
+                text = String(index)
+            }
+            button.setTitle(text, for: .normal)
+            self.addSubview(button)
+        }
+    }
+    
+    
+    /**
+     * Button label actions
+     */
+    @objc func buttonPressed(sender: RoundButton!) {
+        print("presionado \(sender.titleLabel?.text)")
+    }
+    
+
+    /**
+     * Draw background for x axis
+     */
+    fileprivate func drawXBackground(forHeight height: CGFloat) {
+        let y = self.bounds.height - x.axis.inset + x.labels.marginTop - x.labels.paddingTopBottom
+        let width = self.bounds.size.width
+        let backView = UIView(frame: CGRect(x: 0, y: y, width: width, height: height + (2 * x.labels.paddingTopBottom)))
+        backView.backgroundColor = x.labels.backgroundColor
+        self.addSubview(backView)
     }
     
     

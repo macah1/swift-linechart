@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04DB40591E85736C00A3C736 /* RoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB40581E85736C00A3C736 /* RoundButton.swift */; };
 		C06F8E1B1962FFD7000AC9AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06F8E1A1962FFD7000AC9AF /* AppDelegate.swift */; };
 		C06F8E1D1962FFD7000AC9AF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C06F8E1C1962FFD7000AC9AF /* Images.xcassets */; };
 		C06F8E291962FFD7000AC9AF /* linechartTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06F8E281962FFD7000AC9AF /* linechartTests.swift */; };
@@ -25,6 +26,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		04DB40581E85736C00A3C736 /* RoundButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundButton.swift; sourceTree = "<group>"; };
 		C06F8E151962FFD7000AC9AF /* linechart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = linechart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C06F8E191962FFD7000AC9AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C06F8E1A1962FFD7000AC9AF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				C06F8E321962FFEC000AC9AF /* MainViewController.swift */,
+				04DB40581E85736C00A3C736 /* RoundButton.swift */,
 				C06F8E3419630045000AC9AF /* LineChart.swift */,
 				C06F8E181962FFD7000AC9AF /* Supporting Files */,
 			);
@@ -210,6 +213,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04DB40591E85736C00A3C736 /* RoundButton.swift in Sources */,
 				C06F8E1B1962FFD7000AC9AF /* AppDelegate.swift in Sources */,
 				C06F8E331962FFEC000AC9AF /* MainViewController.swift in Sources */,
 				C06F8E3519630045000AC9AF /* LineChart.swift in Sources */,
