@@ -103,8 +103,9 @@ open class LineChart: UIView {
     
     open var x: Coordinate = Coordinate()
     open var y: Coordinate = Coordinate()
-
     
+    var boundsGraph: CGRect = CGRect.zero
+
     // values calculated on init
     fileprivate var drawingHeight: CGFloat = 0 {
         didSet {
@@ -162,6 +163,8 @@ open class LineChart: UIView {
     }
     
     override open func draw(_ rect: CGRect) {
+
+        self.boundsGraph = CGRect(x: self.bounds.origin.x, y: self.bounds.origin.x, width:  self.bounds.width, height: self.bounds.height - 46)
         
         if removeAll {
             let context = UIGraphicsGetCurrentContext()
@@ -169,8 +172,8 @@ open class LineChart: UIView {
             return
         }
         
-        self.drawingHeight = self.bounds.height - (2 * y.axis.inset)
-        self.drawingWidth = self.bounds.width - (2 * x.axis.inset)
+        self.drawingHeight = self.boundsGraph.height - (2 * y.axis.inset)
+        self.drawingWidth = self.boundsGraph.width - (2 * x.axis.inset)
         
         // remove all labels
         for view: AnyObject in self.subviews {
@@ -316,7 +319,7 @@ open class LineChart: UIView {
         
         for index in 0..<data.count {
             let xValue = self.x.scale(CGFloat(index)) + x.axis.inset - dots.outerRadius/2
-            let yValue = self.bounds.height - self.y.scale(data[index]) - y.axis.inset - dots.outerRadius/2
+            let yValue = self.boundsGraph.height - self.y.scale(data[index]) - y.axis.inset - dots.outerRadius/2
             
             // draw custom layer with another layer in the center
             let dotLayer = DotCALayer()
@@ -353,8 +356,8 @@ open class LineChart: UIView {
      * Draw x and y axis.
      */
     fileprivate func drawAxes() {
-        let height = self.bounds.height
-        let width = self.bounds.width
+        let height = self.boundsGraph.height
+        let width = self.boundsGraph.width
         let path = UIBezierPath()
         // draw x-axis
         x.axis.color.setStroke()
@@ -412,16 +415,16 @@ open class LineChart: UIView {
         let path = UIBezierPath()
         
         var xValue = self.x.scale(0) + x.axis.inset
-        var yValue = self.bounds.height - self.y.scale(data[0]) - y.axis.inset
+        var yValue = self.boundsGraph.height - self.y.scale(data[0]) - y.axis.inset
         path.move(to: CGPoint(x: xValue, y: yValue))
         for index in 1..<data.count {
             xValue = self.x.scale(CGFloat(index)) + x.axis.inset
-            yValue = self.bounds.height - self.y.scale(data[index]) - y.axis.inset
+            yValue = self.boundsGraph.height - self.y.scale(data[index]) - y.axis.inset
             path.addLine(to: CGPoint(x: xValue, y: yValue))
         }
         
         let layer = CAShapeLayer()
-        layer.frame = self.bounds
+        layer.frame = self.boundsGraph
         layer.path = path.cgPath
         layer.strokeColor = colors[lineIndex].cgColor
         layer.fillColor = nil
@@ -453,19 +456,19 @@ open class LineChart: UIView {
         
         colors[lineIndex].withAlphaComponent(0.2).setFill()
         // move to origin
-        path.move(to: CGPoint(x: x.axis.inset, y: self.bounds.height - self.y.scale(0) - y.axis.inset))
+        path.move(to: CGPoint(x: x.axis.inset, y: self.boundsGraph.height - self.y.scale(0) - y.axis.inset))
         // add line to first data point
-        path.addLine(to: CGPoint(x: x.axis.inset, y: self.bounds.height - self.y.scale(data[0]) - y.axis.inset))
+        path.addLine(to: CGPoint(x: x.axis.inset, y: self.boundsGraph.height - self.y.scale(data[0]) - y.axis.inset))
         // draw whole line chart
         for index in 1..<data.count {
             let x1 = self.x.scale(CGFloat(index)) + x.axis.inset
-            let y1 = self.bounds.height - self.y.scale(data[index]) - y.axis.inset
+            let y1 = self.boundsGraph.height - self.y.scale(data[index]) - y.axis.inset
             path.addLine(to: CGPoint(x: x1, y: y1))
         }
         // move down to x axis
-        path.addLine(to: CGPoint(x: self.x.scale(CGFloat(data.count - 1)) + x.axis.inset, y: self.bounds.height - self.y.scale(0) - y.axis.inset))
+        path.addLine(to: CGPoint(x: self.x.scale(CGFloat(data.count - 1)) + x.axis.inset, y: self.boundsGraph.height - self.y.scale(0) - y.axis.inset))
         // move to origin
-        path.addLine(to: CGPoint(x: x.axis.inset, y: self.bounds.height - self.y.scale(0) - y.axis.inset))
+        path.addLine(to: CGPoint(x: x.axis.inset, y: self.boundsGraph.height - self.y.scale(0) - y.axis.inset))
         path.fill()
     }
     
@@ -478,7 +481,7 @@ open class LineChart: UIView {
         x.grid.color.setStroke()
         let path = UIBezierPath()
         var x1: CGFloat
-        let y1: CGFloat = self.bounds.height - y.axis.inset
+        let y1: CGFloat = self.boundsGraph.height - y.axis.inset
         let y2: CGFloat = y.axis.inset
         let (start, stop, step) = self.x.ticks
         for i in stride(from: start, through: stop, by: step){
@@ -498,11 +501,11 @@ open class LineChart: UIView {
         self.y.grid.color.setStroke()
         let path = UIBezierPath()
         let x1: CGFloat = x.axis.inset
-        let x2: CGFloat = self.bounds.width - x.axis.inset
+        let x2: CGFloat = self.boundsGraph.width - x.axis.inset
         var y1: CGFloat
         let (start, stop, step) = self.y.ticks
         for i in stride(from: start, through: stop, by: step){
-            y1 = self.bounds.height - self.y.scale(i) - y.axis.inset
+            y1 = self.boundsGraph.height - self.y.scale(i) - y.axis.inset
             path.move(to: CGPoint(x: x1, y: y1))
             path.addLine(to: CGPoint(x: x2, y: y1))
         }
@@ -526,7 +529,7 @@ open class LineChart: UIView {
      */
     fileprivate func drawXLabels() {
         let xAxisData = self.dataStore[0]
-        let y = self.bounds.height - x.axis.inset
+        let y = self.boundsGraph.height - x.axis.inset
         let (_, _, step) = x.linear.ticks(xAxisData.count)
         let width = x.scale(step)
         
@@ -551,7 +554,7 @@ open class LineChart: UIView {
      */
     fileprivate func drawSIIXLabels() {
         let xAxisData = self.dataStore[0]
-        let y = self.bounds.height - x.axis.inset + x.labels.marginTop
+        let y = self.boundsGraph.height - x.axis.inset + x.labels.marginTop
         let (_, _, step) = x.linear.ticks(xAxisData.count)
         let width = x.scale(step) / 2
         let height = width
@@ -591,8 +594,8 @@ open class LineChart: UIView {
      * Draw background for x axis
      */
     fileprivate func drawXBackground(forHeight height: CGFloat) {
-        let y = self.bounds.height - x.axis.inset + x.labels.marginTop - x.labels.paddingTopBottom
-        let width = self.bounds.size.width
+        let y = self.boundsGraph.height - x.axis.inset + x.labels.marginTop - x.labels.paddingTopBottom
+        let width = self.boundsGraph.size.width
         let backView = UIView(frame: CGRect(x: 0, y: y, width: width, height: height + (2 * x.labels.paddingTopBottom)))
         backView.backgroundColor = x.labels.backgroundColor
         self.addSubview(backView)
@@ -607,7 +610,7 @@ open class LineChart: UIView {
         var yValue: CGFloat
         let (start, stop, step) = self.y.ticks
         for i in stride(from: start, through: stop, by: step){
-            yValue = self.bounds.height - self.y.scale(i) - (y.axis.inset * 1.5)
+            yValue = self.boundsGraph.height - self.y.scale(i) - (y.axis.inset * 1.5)
             let label = UILabel(frame: CGRect(x: 0, y: yValue, width: y.axis.inset, height: y.axis.inset))
             label.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.caption2)
             label.textAlignment = .center
