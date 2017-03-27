@@ -163,8 +163,14 @@ open class LineChart: UIView {
     }
     
     override open func draw(_ rect: CGRect) {
+        let xAxisData = self.dataStore[0]
+        let linear = LinearScale(domain: [0.0, CGFloat(xAxisData.count - 1)], range: [0, self.bounds.width - (2 * x.axis.inset)])
+        let (_, _, step) = linear.ticks(xAxisData.count)
+        let scale = linear.scale()
+        let scaleStep = scale(step)
+        let extraHeight = ( scaleStep / 2) - x.axis.inset + (2 * x.labels.paddingTopBottom) + x.labels.marginTop
 
-        self.boundsGraph = CGRect(x: self.bounds.origin.x, y: self.bounds.origin.x, width:  self.bounds.width, height: self.bounds.height - 46)
+        self.boundsGraph = CGRect(x: self.bounds.origin.x, y: self.bounds.origin.x, width:  self.bounds.width, height: self.bounds.height - extraHeight)
         
         if removeAll {
             let context = UIGraphicsGetCurrentContext()
