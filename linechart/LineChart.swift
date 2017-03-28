@@ -168,7 +168,7 @@ open class LineChart: UIView {
         let (_, _, step) = linear.ticks(xAxisData.count)
         let scale = linear.scale()
         let scaleStep = scale(step)
-        let extraHeight = ( scaleStep / 2) - x.axis.inset + (2 * x.labels.paddingTopBottom) + x.labels.marginTop
+        let extraHeight = ( scaleStep / 2 ) - x.axis.inset + x.labels.paddingTopBottom + x.labels.marginTop
 
         self.boundsGraph = CGRect(x: self.bounds.origin.x, y: self.bounds.origin.x, width:  self.bounds.width, height: self.bounds.height - extraHeight)
         
